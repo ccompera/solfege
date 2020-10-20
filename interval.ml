@@ -1,6 +1,8 @@
 type name = Unison | Second | Third | Fourth | Fifth | Sixth | Seventh | Octave
+[@@deriving show]
 
 type kind = Perfect | Minor | Major | Augmented | Diminished
+[@@deriving show]
 
 type t = {
 	nb_notes : int;
@@ -8,6 +10,7 @@ type t = {
 	name : name;
 	nb_tones : float;
 }
+[@@deriving show]
 
 let intervals = [
 	{

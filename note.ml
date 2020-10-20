@@ -1,47 +1,47 @@
 type name = A | B | C | D | E | F | G
-
-type tone = Tone | Semitone
+[@@deriving show]
 
 type t = {
 	name : name;
-	tone_up : tone;
-	tone_down : tone;
+	tone_up : float;
+	tone_down : float;
 }
+[@@deriving show]
 
 let scale = [
 	{
 		name = C;
-		tone_up = Tone;
-		tone_down = Semitone;
+		tone_up = 1.0;
+		tone_down = 0.5;
 	};
 	{
 		name = D;
-		tone_up = Tone;
-		tone_down = Tone;
+		tone_up = 1.0;
+		tone_down = 1.0;
 	};
 	{
 		name = E;
-		tone_up = Semitone;
-		tone_down = Tone;
+		tone_up = 0.5;
+		tone_down = 1.0;
 	};
 	{
 		name = F;
-		tone_up = Tone;
-		tone_down = Semitone;
+		tone_up = 1.0;
+		tone_down = 0.5;
 	};
 	{
 		name = G;
-		tone_up = Tone;
-		tone_down = Tone;
+		tone_up = 1.0;
+		tone_down = 1.0;
 	};
 	{
 		name = A;
-		tone_up = Tone;
-		tone_down = Tone;
+		tone_up = 1.0;
+		tone_down = 1.0;
 	};
 	{
 		name = B;
-		tone_up = Semitone;
-		tone_down = Tone;
+		tone_up = 0.5;
+		tone_down = 1.0;
 	}
 ]
