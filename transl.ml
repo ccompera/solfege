@@ -1,5 +1,13 @@
-let en =
-  object
+let fpf = Format.fprintf
+
+type t =
+  < note_name : Note.name -> string
+  ; interval_name : Interval.name -> string
+  ; interval_kind : Interval.kind -> string
+  ; pp_note : Format.formatter -> Note.t -> unit >
+
+let en : t =
+  object (self)
     method note_name n =
       match n with
       | Note.A -> "A"
@@ -28,10 +36,12 @@ let en =
       | Major -> "major"
       | Augmented -> "augmented"
       | Diminished -> "diminished"
+
+    method pp_note fmt n = fpf fmt "%s" (self#note_name n.Note.name)
   end
 
-let fr =
-  object
+let fr : t =
+  object (self)
     method note_name n =
       match n with
       | Note.A -> "la"
@@ -60,4 +70,6 @@ let fr =
       | Major -> "majeure"
       | Augmented -> "augmentée"
       | Diminished -> "diminuée"
+
+    method pp_note fmt n = fpf fmt "%s" (self#note_name n.Note.name)
   end
