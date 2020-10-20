@@ -1,1 +1,5 @@
-(executable (name main) (public_name solfege))
+(executable
+ (name main)
+ (public_name solfege)
+ (preprocess
+  (pps ppx_deriving.show)))
