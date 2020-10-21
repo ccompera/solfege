@@ -1,20 +1,14 @@
 open Format
 
+let prompt () =
+  printf "%!";
+  let _ = read_line () in
+  ()
+
 let find_note note = List.find (fun n -> n.Note.name = note) Note.scale
 
 let find_interval interval =
   List.filter (fun i -> i.Interval.name = interval) Interval.intervals
-
-let rec skip item lst =
-  match lst with
-  | hd :: tl -> if hd = item then lst else skip item tl
-  | [] -> []
-
-let rec find_nth_note n t lst =
-  match lst with
-  | hd :: tl ->
-      if n = 1 then (hd, t) else find_nth_note (n - 1) (t +. hd.Note.tone_up) tl
-  | [] -> find_nth_note n t Note.scale
 
 let find_interval_by_nb nbn nbt =
   List.find
@@ -28,6 +22,24 @@ let find_interval_by_name iname nbt =
 
 let find_opposite_interval interval =
   find_interval_by_nb (9 - interval.Interval.nb_notes) (6. -. interval.nb_tones)
+
+let rec skip item lst =
+  match lst with
+  | hd :: tl -> if hd = item then lst else skip item tl
+  | [] -> []
+
+let rec find_nth_note n t lst =
+  match lst with
+  | hd :: tl ->
+      if n = 1 then (hd, t) else find_nth_note (n - 1) (t +. hd.Note.tone_up) tl
+  | [] -> find_nth_note n t Note.scale
+
+let rec count_diff n2 cn ct lst =
+  match lst with
+  | hd :: tl ->
+      if hd = n2 then (cn, ct)
+      else count_diff n2 (cn + 1) (ct +. hd.Note.tone_up) tl
+  | [] -> count_diff n2 cn ct Note.scale
 
 let find_up_note origin interval_name =
   let origin_n = find_note origin in
@@ -44,13 +56,6 @@ let find_down_note origin interval_name =
   let dest, inter_rev = find_up_note origin interval_reverse.Interval.name in
   (dest, find_interval_by_name interval_name (6. -. inter_rev.nb_tones))
 
-let rec count_diff n2 cn ct lst =
-  match lst with
-  | hd :: tl ->
-      if hd = n2 then (cn, ct)
-      else count_diff n2 (cn + 1) (ct +. hd.Note.tone_up) tl
-  | [] -> count_diff n2 cn ct Note.scale
-
 let find_intervals n1 n2 =
   let n1 = find_note n1 in
   let n2 = find_note n2 in
@@ -61,16 +66,16 @@ let find_intervals n1 n2 =
 let main lang =
   let transl = match lang with `En -> Transl.en | `Fr -> Transl.fr in
   printf "Solfege\n";
-  printf "==========\n";
-  printf "%a" transl#q_find_up_note (Note.B, Interval.Third);
+  printf "==========";prompt ();
+  printf "%a" transl#q_find_up_note (Note.B, Interval.Third);prompt ();
   let dest, interval = find_up_note Note.B Interval.Third in
   printf "%a" transl#a_find_up_note (Note.B, dest.name, interval);
-  printf "==========\n";
-  printf "%a" transl#q_find_down_note (Note.B, Interval.Third);
+  printf "==========";prompt ();
+  printf "%a" transl#q_find_down_note (Note.B, Interval.Third);prompt ();
   let dest, interval = find_down_note Note.B Interval.Third in
   printf "%a" transl#a_find_down_note (Note.B, dest.name, interval);
-  printf "==========\n";
-  printf "%a" transl#q_find_intervals (Note.B, Note.C);
+  printf "==========";prompt ();
+  printf "%a" transl#q_find_intervals (Note.B, Note.C);prompt ();
   let intervals = find_intervals Note.B Note.C in
   printf "%a" transl#a_find_intervals (Note.B, Note.C, intervals);
   printf "==========\n"

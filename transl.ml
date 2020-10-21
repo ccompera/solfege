@@ -74,24 +74,16 @@ let en : t =
       fpf fmt " %s\n%a.\n" (self#note_name n2) self#print_interval
         (n1, n2, i, true)
 
-    (* fpf fmt " %s\n%s.•°%s is a ascending %s %s (%1.1f tones).\n"
-       (self#note_name n2) (self#note_name n1) (self#note_name n2)
-       (self#interval_kind i.Interval.kind)
-       (self#interval_name i.name)
-       i.nb_tones *)
     method q_find_down_note fmt (n, i) =
       fpf fmt "What is the descending %s of %s?" (self#interval_name i)
         (self#note_name n)
 
     method a_find_down_note fmt (n1, n2, i) =
-      fpf fmt " %s\n%s°•.%s is a descending %s %s (%1.1f tones).\n"
-        (self#note_name n2) (self#note_name n1) (self#note_name n2)
-        (self#interval_kind i.Interval.kind)
-        (self#interval_name i.name)
-        i.nb_tones
+      fpf fmt " %s\n%a.\n"
+        (self#note_name n2) self#print_interval (n1, n2, i, false)
 
     method q_find_intervals fmt (n1, n2) =
-      fpf fmt "What are the possible intervals between %s and %s?\n"
+      fpf fmt "What are the possible intervals between %s and %s?"
         (self#note_name n1) (self#note_name n2)
 
     method a_find_intervals fmt (n1, n2, (i1, i2)) =
@@ -166,7 +158,7 @@ let fr : t =
         (n1, n2, i, false)
 
     method q_find_intervals fmt (n1, n2) =
-      fpf fmt "Quels sont les intervalles possibles entre %s et %s ?\n"
+      fpf fmt "Quels sont les intervalles possibles entre %s et %s ?"
         (self#note_name n1) (self#note_name n2)
 
     method a_find_intervals fmt (n1, n2, (i1, i2)) =
