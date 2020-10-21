@@ -3,5 +3,4 @@
  (public_name solfege)
  (preprocess
   (pps ppx_deriving.show))
- (libraries cmdliner)
-)
+ (libraries cmdliner))
