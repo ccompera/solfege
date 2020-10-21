@@ -29,11 +29,31 @@ let find_up_note origin interval_name =
   in
   (dest, interval)
 
+let find_down_note origin interval_name =
+  let _, interval2 = find_up_note origin interval_name in
+  let interval_reverse =
+    List.find
+      (fun i ->
+        i.Interval.nb_notes = 9 - interval2.nb_notes
+        && i.nb_tones = 6. -. interval2.nb_tones)
+      Interval.intervals
+  in
+  let dest, inter_rev = find_up_note origin interval_reverse.Interval.name in
+  ( dest,
+    List.find
+      (fun i ->
+        i.Interval.name = interval_name && i.nb_tones = 6. -. inter_rev.nb_tones)
+      Interval.intervals )
+
 let () =
   printf "Solfege@\n";
+  printf "==========\n";
+  printf "%a" Transl.en#q_find_up_note (Note.B, Interval.Third);
   let dest, interval = find_up_note Note.B Interval.Third in
-  printf "The upcoming third of B is %a. It is a %s %s.\n" Transl.en#pp_note
-    dest
-    (Transl.en#interval_kind interval.Interval.kind)
-    (Transl.en#interval_name interval.Interval.name);
+  printf "%a" Transl.en#a_find_up_note (Note.B, dest.name, interval);
+  printf "==========\n";
+  printf "%a" Transl.en#q_find_down_note (Note.B, Interval.Third);
+  let dest, interval = find_down_note Note.B Interval.Third in
+  printf "%a" Transl.en#a_find_down_note (Note.B, dest.name, interval);
+  printf "==========\n";
   ()
