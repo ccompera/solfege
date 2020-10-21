@@ -45,15 +45,30 @@ let find_down_note origin interval_name =
         i.Interval.name = interval_name && i.nb_tones = 6. -. inter_rev.nb_tones)
       Interval.intervals )
 
-let () =
-  printf "Solfege@\n";
+let main lang =
+  let transl = match lang with `En -> Transl.en | `Fr -> Transl.fr in
+  printf "Solfege\n";
   printf "==========\n";
-  printf "%a" Transl.en#q_find_up_note (Note.B, Interval.Third);
+  printf "%a" transl#q_find_up_note (Note.B, Interval.Third);
   let dest, interval = find_up_note Note.B Interval.Third in
-  printf "%a" Transl.en#a_find_up_note (Note.B, dest.name, interval);
+  printf "%a" transl#a_find_up_note (Note.B, dest.name, interval);
   printf "==========\n";
-  printf "%a" Transl.en#q_find_down_note (Note.B, Interval.Third);
+  printf "%a" transl#q_find_down_note (Note.B, Interval.Third);
   let dest, interval = find_down_note Note.B Interval.Third in
-  printf "%a" Transl.en#a_find_down_note (Note.B, dest.name, interval);
+  printf "%a" transl#a_find_down_note (Note.B, dest.name, interval);
   printf "==========\n";
   ()
+
+open Cmdliner
+
+let lang = Arg.enum [ "en", `En; "fr", `Fr ]
+
+let cmd =
+  let a_lang =
+    let doc = "Language. Either English ('en') or French ('fr')." in
+    Arg.(value & opt lang `En & info ["lang"] ~doc)
+  in
+  let doc = "Learn your intervals." in
+  Term.(pure main $ a_lang, info "Solfege" ~doc)
+
+let () = Term.exit @@ Term.eval cmd
