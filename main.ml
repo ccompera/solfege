@@ -63,21 +63,53 @@ let find_intervals n1 n2 =
   let i1 = find_interval_by_nb nb_notes nb_tones in
   (i1, find_opposite_interval i1)
 
+let rec go_round o c i acc func =
+  if c = o then List.rev acc
+  else
+    let dest, inter = func c i in
+    go_round o dest.Note.name i ((c, dest, inter) :: acc) func
+
+let go_round_up origin interval =
+  let c, i = find_up_note origin interval in
+  (go_round origin c.Note.name interval [ (origin, c, i) ] find_up_note, true)
+
+let go_round_down origin interval =
+  let c, i = find_down_note origin interval in
+  (go_round origin c.Note.name interval [ (origin, c, i) ] find_down_note, false)
+
 let main lang =
   let transl = match lang with `En -> Transl.en | `Fr -> Transl.fr in
   printf "Solfege\n";
-  printf "==========";prompt ();
-  printf "%a" transl#q_find_up_note (Note.B, Interval.Third);prompt ();
+  printf "==========";
+  prompt ();
+  printf "%a" transl#q_find_up_note (Note.B, Interval.Third);
+  prompt ();
   let dest, interval = find_up_note Note.B Interval.Third in
-  printf "%a" transl#a_find_up_note (Note.B, dest.name, interval);
-  printf "==========";prompt ();
-  printf "%a" transl#q_find_down_note (Note.B, Interval.Third);prompt ();
+  printf "%a" transl#a_find_up_note (Note.B, dest, interval);
+  printf "==========";
+  prompt ();
+  printf "%a" transl#q_find_down_note (Note.B, Interval.Third);
+  prompt ();
   let dest, interval = find_down_note Note.B Interval.Third in
-  printf "%a" transl#a_find_down_note (Note.B, dest.name, interval);
-  printf "==========";prompt ();
-  printf "%a" transl#q_find_intervals (Note.B, Note.C);prompt ();
+  printf "%a" transl#a_find_down_note (Note.B, dest, interval);
+  printf "==========";
+  prompt ();
+  printf "%a" transl#q_find_intervals (Note.B, Note.C);
+  prompt ();
   let intervals = find_intervals Note.B Note.C in
   printf "%a" transl#a_find_intervals (Note.B, Note.C, intervals);
+  printf "==========";
+  prompt ();
+  printf "%a" transl#q_go_round (Note.B, Interval.Third, true);
+  prompt ();
+  let lst, _ = go_round_up Note.B Interval.Third in
+  transl#a_go_round (lst, true);
+  printf "==========";
+  prompt ();
+  printf "%a" transl#q_go_round (Note.B, Interval.Third, false);
+  prompt ();
+  let lst, _ = go_round_down Note.B Interval.Third in
+  transl#a_go_round (lst, false);
   printf "==========\n"
 
 open Cmdliner

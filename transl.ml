@@ -8,15 +8,17 @@ type t =
       Format.formatter -> Note.name * Note.name * Interval.t * bool -> unit
   ; q_find_up_note : Format.formatter -> Note.name * Interval.name -> unit
   ; a_find_up_note :
-      Format.formatter -> Note.name * Note.name * Interval.t -> unit
+      Format.formatter -> Note.name * Note.t * Interval.t -> unit
   ; q_find_down_note : Format.formatter -> Note.name * Interval.name -> unit
   ; a_find_down_note :
-      Format.formatter -> Note.name * Note.name * Interval.t -> unit
+      Format.formatter -> Note.name * Note.t * Interval.t -> unit
   ; q_find_intervals : Format.formatter -> Note.name * Note.name -> unit
   ; a_find_intervals :
       Format.formatter ->
       Note.name * Note.name * (Interval.t * Interval.t) ->
       unit
+  ; q_go_round : Format.formatter -> Note.name * Interval.name * bool -> unit
+  ; a_go_round : (Note.name * Note.t * Interval.t) list * bool -> unit
   ; pp_note : Format.formatter -> Note.t -> unit >
 
 let en : t =
@@ -71,25 +73,35 @@ let en : t =
         (self#note_name n)
 
     method a_find_up_note fmt (n1, n2, i) =
-      fpf fmt " %s\n%a.\n" (self#note_name n2) self#print_interval
-        (n1, n2, i, true)
+      fpf fmt " %s\n%a\n" (self#note_name n2.Note.name) self#print_interval
+        (n1, n2.name, i, true)
 
     method q_find_down_note fmt (n, i) =
       fpf fmt "What is the descending %s of %s?" (self#interval_name i)
         (self#note_name n)
 
     method a_find_down_note fmt (n1, n2, i) =
-      fpf fmt " %s\n%a.\n"
-        (self#note_name n2) self#print_interval (n1, n2, i, false)
+      fpf fmt " %s\n%a\n"
+        (self#note_name n2.Note.name) self#print_interval (n1, n2.name, i, false)
 
     method q_find_intervals fmt (n1, n2) =
       fpf fmt "What are the possible intervals between %s and %s?"
         (self#note_name n1) (self#note_name n2)
 
     method a_find_intervals fmt (n1, n2, (i1, i2)) =
-      fpf fmt "%a.\n%a.\n<>\n%a\n%a\n" self#print_interval (n1, n2, i1, true)
+      fpf fmt "%a\n%a\n<>\n%a\n%a\n" self#print_interval (n1, n2, i1, true)
         self#print_interval (n2, n1, i2, true) self#print_interval
         (n1, n2, i2, false) self#print_interval (n2, n1, i1, false)
+
+    method q_go_round fmt (n, i, up) =
+      fpf fmt "Go %s from %s to %s starting from %s:"
+        (if up then "upward" else "downward")
+        (self#interval_name i)
+        (self#interval_name i)
+        (self#note_name n)
+
+    method a_go_round (lst, up) =
+      List.iter (fun (n1, n2, i) -> Format.printf "%a\n" self#print_interval (n1, n2.Note.name, i, up)) lst
 
     method pp_note fmt n = fpf fmt "%s" (self#note_name n.Note.name)
   end
@@ -146,25 +158,35 @@ let fr : t =
         (self#note_name n)
 
     method a_find_up_note fmt (n1, n2, i) =
-      fpf fmt " %s\n%a.\n" (self#note_name n2) self#print_interval
-        (n1, n2, i, true)
+      fpf fmt " %s\n%a\n" (self#note_name n2.Note.name) self#print_interval
+        (n1, n2.name, i, true)
 
     method q_find_down_note fmt (n, i) =
       fpf fmt "Quelle est la %s descendante de %s ?" (self#interval_name i)
         (self#note_name n)
 
     method a_find_down_note fmt (n1, n2, i) =
-      fpf fmt " %s\n%a.\n" (self#note_name n2) self#print_interval
-        (n1, n2, i, false)
+      fpf fmt " %s\n%a\n" (self#note_name n2.Note.name) self#print_interval
+        (n1, n2.name, i, false)
 
     method q_find_intervals fmt (n1, n2) =
       fpf fmt "Quels sont les intervalles possibles entre %s et %s ?"
         (self#note_name n1) (self#note_name n2)
 
     method a_find_intervals fmt (n1, n2, (i1, i2)) =
-      fpf fmt "%a.\n%a.\n<>\n%a\n%a\n" self#print_interval (n1, n2, i1, true)
+      fpf fmt "%a\n%a\n<>\n%a\n%a\n" self#print_interval (n1, n2, i1, true)
         self#print_interval (n2, n1, i2, true) self#print_interval
         (n1, n2, i2, false) self#print_interval (n2, n1, i1, false)
+
+    method q_go_round fmt (n, i, up) =
+      fpf fmt "Aller de %s en %s %s à partir de %s :"
+        (self#interval_name i)
+        (self#interval_name i)
+        (if up then "montante" else "descendante")
+        (self#note_name n)
+
+    method a_go_round (lst, up) =
+      List.iter (fun (n1, n2, i) -> Format.printf "%s -> %a\n" (self#note_name n2.Note.name) self#print_interval (n1, n2.Note.name, i, up)) lst
 
     method pp_note fmt n = fpf fmt "%s" (self#note_name n.Note.name)
   end
