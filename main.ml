@@ -5,8 +5,6 @@ let prompt () =
   let _ = read_line () in
   ()
 
-(* let find_note_by_name note = List.find (fun n -> n.Note.name = note) Note.scale *)
-
 let random_note () = List.nth Note.scale (Random.int (List.length Note.scale))
 
 let remove_first lst = match lst with _ :: tl -> tl | [] -> []
@@ -20,7 +18,7 @@ let random_question qs = List.nth qs (Random.int (List.length qs))
 
 let play transl =
   printf "%s" Transl.header;
-  transl#start ();
+  Playground.start transl;
   prompt ();
   while true do
     let n1 = random_note () in
@@ -37,6 +35,12 @@ let play transl =
 let main lang =
   Random.self_init ();
   let transl = match lang with `En -> Transl.en | `Fr -> Transl.fr in
+  Sys.(
+    set_signal sigint
+      (Signal_handle
+         (fun _ ->
+           Playground.leave transl;
+           exit 0)));
   play transl
 
 open Cmdliner

@@ -1,12 +1,13 @@
 let fpf = Format.fprintf
 
 type t =
-  < note_name : Note.t -> string
+  < start : Format.formatter -> unit -> unit
+  ; leave : Format.formatter -> unit -> unit
+  ; note_name : Note.t -> string
   ; interval_name : Interval.name -> string
   ; interval_kind : Interval.kind -> string
   ; print_interval :
       Format.formatter -> Note.t * Note.t * Interval.t * bool -> unit
-  ; start : unit -> unit
   ; q_find_note :
       Format.formatter -> Note.t * Note.t * Interval.name * bool -> unit
   ; q_find_intervals :
@@ -43,6 +44,10 @@ let header =
 
 let en : t =
   object (self)
+    method start fmt () = fpf fmt "Ready?"
+
+    method leave fmt () = fpf fmt "See you soon!"
+
     method note_name n =
       match n.Note.name with
       | Note.A -> "A"
@@ -88,8 +93,6 @@ let en : t =
           i.nb_tones
           (if i.nb_tones > 1. then "s" else "")
 
-    method start () = Format.printf "Ready?"
-
     method q_find_note fmt (n1, _, i, up) =
       fpf fmt "What is the %s %s of %s?"
         (if up then "ascending" else "descending")
@@ -125,6 +128,10 @@ let en : t =
 
 let fr : t =
   object (self)
+    method start fmt () = fpf fmt "Prêt ?"
+
+    method leave fmt () = fpf fmt "À bientôt !"
+
     method note_name n =
       match n.Note.name with
       | Note.A -> "la"
@@ -169,8 +176,6 @@ let fr : t =
           (self#interval_kind i.kind)
           i.nb_tones
           (if i.nb_tones > 1. then "s" else "")
-
-    method start () = Format.printf "Prêt ?"
 
     method q_find_note fmt (n1, _, i, up) =
       fpf fmt "Quelle est la %s %s de %s ?" (self#interval_name i)

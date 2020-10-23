@@ -1,3 +1,7 @@
+let start transl = Format.printf "%a" transl#start ()
+
+let leave transl = Format.printf "\n%a\n" transl#leave ()
+
 let find_interval interval =
   List.filter (fun i -> i.Interval.name = interval) Interval.intervals
 
