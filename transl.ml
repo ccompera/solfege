@@ -22,13 +22,24 @@ type t =
   ; pp_note : Format.formatter -> Note.t -> unit >
 
 let header =
-"███████╗ ██████╗ ██╗     ███████╗███████╗ ██████╗ ███████╗
-██╔════╝██╔═══██╗██║     ██╔════╝██╔════╝██╔════╝ ██╔════╝
-███████╗██║   ██║██║     █████╗  █████╗  ██║  ███╗█████╗  
-╚════██║██║   ██║██║     ██╔══╝  ██╔══╝  ██║   ██║██╔══╝  
-███████║╚██████╔╝███████╗██║     ███████╗╚██████╔╝███████╗
-╚══════╝ ╚═════╝ ╚══════╝╚═╝     ╚══════╝ ╚═════╝ ╚══════╝
-                                                          \n"
+  "███████╗ ██████╗ ██╗     \
+   ███████╗███████╗ ██████╗ \
+   ███████╗\n\
+   ██╔════╝██╔═══██╗██║     \
+   ██╔════╝██╔════╝██╔════╝ \
+   ██╔════╝\n\
+   ███████╗██║   ██║██║     \
+   █████╗  █████╗  ██║  \
+   ███╗█████╗  \n\
+   ╚════██║██║   ██║██║     \
+   ██╔══╝  ██╔══╝  ██║   \
+   ██║██╔══╝  \n\
+   ███████║╚██████╔╝███████╗██║     \
+   ███████╗╚██████╔╝███████╗\n\
+   ╚══════╝ ╚═════╝ \
+   ╚══════╝╚═╝     ╚══════╝ \
+   ╚═════╝ ╚══════╝\n\
+  \                                                          \n"
 
 let en : t =
   object (self)
@@ -77,8 +88,7 @@ let en : t =
           i.nb_tones
           (if i.nb_tones > 1. then "s" else "")
 
-    method start () =
-      Format.printf "Ready?"
+    method start () = Format.printf "Ready?"
 
     method q_find_note fmt (n1, _, i, up) =
       fpf fmt "What is the %s %s of %s?"
@@ -160,8 +170,7 @@ let fr : t =
           i.nb_tones
           (if i.nb_tones > 1. then "s" else "")
 
-    method start () =
-      Format.printf "Prêt ?"
+    method start () = Format.printf "Prêt ?"
 
     method q_find_note fmt (n1, _, i, up) =
       fpf fmt "Quelle est la %s %s de %s ?" (self#interval_name i)

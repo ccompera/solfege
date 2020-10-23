@@ -9,10 +9,11 @@ let prompt () =
 
 let random_note () = List.nth Note.scale (Random.int (List.length Note.scale))
 
+let remove_first lst = match lst with _ :: tl -> tl | [] -> []
+
 let random_interval () =
-  let i =
-    List.nth Interval.intervals (Random.int (List.length Interval.intervals))
-  in
+  let is = remove_first (List.rev (remove_first Interval.intervals)) in
+  let i = List.nth is (Random.int (List.length is)) in
   i.Interval.name
 
 let random_question qs = List.nth qs (Random.int (List.length qs))
@@ -21,14 +22,17 @@ let play transl =
   printf "%s" Transl.header;
   transl#start ();
   prompt ();
-  let n1 = random_note () in
-  let n2 = random_note () in
-  let i = random_interval () in
-  let q = random_question (Question.questions transl) in
-  printf "%a" q.q (n1, n2, i, q.up);
-  prompt ();
-  printf "%a" q.a (q.func n1 n2 i, q.up);
-  printf "==========\n"
+  while true do
+    let n1 = random_note () in
+    let n2 = random_note () in
+    let i = random_interval () in
+    let q = random_question (Question.questions transl) in
+    printf "%a" q.q (n1, n2, i, q.up);
+    prompt ();
+    printf "%a" q.a (q.func n1 n2 i, q.up);
+    printf "==========";
+    prompt ()
+  done
 
 let main lang =
   Random.self_init ();
