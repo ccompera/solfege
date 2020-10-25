@@ -1,9 +1,11 @@
 open Format
 open Lwt.Syntax
+open Js_of_ocaml
+open Js_of_ocaml_lwt
 
 let prompt () =
   printf "%!";
-  let* _ = Lwt_io.(read_line stdin) in
+  let* _ = Lwt_js_events.click Dom_html.document##.body in
   Lwt.return ()
 
 let random_note () = List.nth Note.scale (Random.int (List.length Note.scale))
@@ -35,27 +37,15 @@ let play transl =
   let* _ = prompt () in
   playrec transl
 
-let main lang =
+let lang = `Fr
+
+let main () =
   Random.self_init ();
   let transl = match lang with `En -> Transl.en | `Fr -> Transl.fr in
-  Sys.(
-    set_signal sigint
-      (Signal_handle
-         (fun _ ->
-           Playground.leave transl;
-           exit 0)));
-  Lwt_main.run (play transl)
+  play transl
 
-open Cmdliner
-
-let lang = Arg.enum [ ("en", `En); ("fr", `Fr) ]
-
-let cmd =
-  let a_lang =
-    let doc = "Language. Either English ('en') or French ('fr')." in
-    Arg.(value & opt lang `En & info [ "lang" ] ~doc)
-  in
-  let doc = "Learn your intervals." in
-  Term.(pure main $ a_lang, info "Solfege" ~doc)
-
-let () = Term.exit @@ Term.eval cmd
+let () =
+  Dom_html.window##.onload :=
+    Dom_html.handler (fun _ ->
+        ignore (main ());
+        Js._false)

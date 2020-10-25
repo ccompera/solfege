@@ -2,6 +2,7 @@
 opam-version: "2.0"
 synopsis: "Learn your intervals"
 description: "Learn your musical intervals"
+maintainer: ["ccompera"]
 authors: ["ccompera"]
 license: "MIT"
 homepage: "https://github.com/ccompera/solfege_ocaml"
@@ -9,8 +10,11 @@ bug-reports: "https://github.com/ccompera/solfege_ocaml/issues"
 depends: [
   "dune" {>= "2.4"}
   "ppx_deriving"
-  "cmdliner"
   "lwt"
+  "js_of_ocaml"
+  "js_of_ocaml-compiler"
+  "js_of_ocaml-ppx"
+  "js_of_ocaml-lwt"
 ]
 build: [
   ["dune" "subst"] {pinned}

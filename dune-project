@@ -5,6 +5,7 @@
 (source (github ccompera/solfege_ocaml))
 (license MIT)
 (authors "ccompera")
+(maintainers "ccompera")
 
 (package
  (name solfege)
@@ -13,5 +14,8 @@
  (depends
   (dune (>= 2.4))
   ppx_deriving
-  cmdliner
-  lwt))
+  lwt
+  js_of_ocaml
+  js_of_ocaml-compiler
+  js_of_ocaml-ppx
+  js_of_ocaml-lwt))

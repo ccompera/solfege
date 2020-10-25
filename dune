@@ -1,6 +1,14 @@
 (executable
  (name main)
- (public_name solfege)
  (preprocess
-  (pps ppx_deriving.show))
- (libraries cmdliner lwt lwt.unix))
+  (pps ppx_deriving.show js_of_ocaml-ppx))
+ (libraries lwt js_of_ocaml js_of_ocaml-lwt)
+ (modes js))
+
+(rule
+ (copy main.bc.js solfege.js))
+
+(install
+ (files index.html solfege.js)
+ (section share)
+ (package solfege))
