@@ -1,9 +1,10 @@
 open Format
+open Lwt.Syntax
 
 let prompt () =
   printf "%!";
-  let _ = read_line () in
-  ()
+  let* _ = Lwt_io.(read_line stdin) in
+  Lwt.return ()
 
 let random_note () = List.nth Note.scale (Random.int (List.length Note.scale))
 
@@ -16,21 +17,23 @@ let random_interval () =
 
 let random_question qs = List.nth qs (Random.int (List.length qs))
 
+let rec playrec transl =
+  let n1 = random_note () in
+  let n2 = random_note () in
+  let i = random_interval () in
+  let q = random_question (Question.questions transl) in
+  printf "%a" q.q (n1, n2, i, q.up);
+  let* _ = prompt () in
+  printf "%a" q.a (q.func n1 n2 i, q.up);
+  printf "==========";
+  let* _ = prompt () in
+  playrec transl
+
 let play transl =
   printf "%s" Transl.header;
   Playground.start transl;
-  prompt ();
-  while true do
-    let n1 = random_note () in
-    let n2 = random_note () in
-    let i = random_interval () in
-    let q = random_question (Question.questions transl) in
-    printf "%a" q.q (n1, n2, i, q.up);
-    prompt ();
-    printf "%a" q.a (q.func n1 n2 i, q.up);
-    printf "==========";
-    prompt ()
-  done
+  let* _ = prompt () in
+  playrec transl
 
 let main lang =
   Random.self_init ();
@@ -41,7 +44,7 @@ let main lang =
          (fun _ ->
            Playground.leave transl;
            exit 0)));
-  play transl
+  Lwt_main.run (play transl)
 
 open Cmdliner
 

@@ -13,4 +13,5 @@
  (depends
   (dune (>= 2.4))
   ppx_deriving
-  cmdliner))
+  cmdliner
+  lwt))
