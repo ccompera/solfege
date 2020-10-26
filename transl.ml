@@ -1,9 +1,7 @@
 let fpf = Format.fprintf
 
 type t =
-  < start : Format.formatter -> unit -> unit
-  ; leave : Format.formatter -> unit -> unit
-  ; new_question_btn : unit -> string
+  < new_question_btn : unit -> string
   ; show_answer_btn : unit -> string
   ; note_name : Note.t -> string
   ; interval_name : Interval.name -> string
@@ -24,32 +22,8 @@ type t =
       Format.formatter -> (Note.t * Note.t * Interval.t) list * bool -> unit
   ; pp_note : Format.formatter -> Note.t -> unit >
 
-let header =
-  "███████╗ ██████╗ ██╗     \
-   ███████╗███████╗ ██████╗ \
-   ███████╗\n\
-   ██╔════╝██╔═══██╗██║     \
-   ██╔════╝██╔════╝██╔════╝ \
-   ██╔════╝\n\
-   ███████╗██║   ██║██║     \
-   █████╗  █████╗  ██║  \
-   ███╗█████╗  \n\
-   ╚════██║██║   ██║██║     \
-   ██╔══╝  ██╔══╝  ██║   \
-   ██║██╔══╝  \n\
-   ███████║╚██████╔╝███████╗██║     \
-   ███████╗╚██████╔╝███████╗\n\
-   ╚══════╝ ╚═════╝ \
-   ╚══════╝╚═╝     ╚══════╝ \
-   ╚═════╝ ╚══════╝\n\
-  \                                                          \n"
-
 let en : t =
   object (self)
-    method start fmt () = fpf fmt "Ready?"
-
-    method leave fmt () = fpf fmt "See you soon!"
-
     method new_question_btn () = "New question"
 
     method show_answer_btn () = "Show answer"
@@ -85,14 +59,14 @@ let en : t =
 
     method print_interval fmt (n1, n2, i, up) =
       if up = true then
-        fpf fmt "%s.•°%s is an ascending %s %s (%1.1f tone%s)"
+        fpf fmt "%s .•° %s is an ascending %s %s (%1.1f tone%s)"
           (self#note_name n1) (self#note_name n2)
           (self#interval_kind i.Interval.kind)
           (self#interval_name i.name)
           i.nb_tones
           (if i.nb_tones > 1. then "s" else "")
       else
-        fpf fmt "%s°•.%s is a descending %s %s (%1.1f tone%s)"
+        fpf fmt "%s °•. %s is a descending %s %s (%1.1f tone%s)"
           (self#note_name n1) (self#note_name n2)
           (self#interval_kind i.Interval.kind)
           (self#interval_name i.name)
@@ -134,10 +108,6 @@ let en : t =
 
 let fr : t =
   object (self)
-    method start fmt () = fpf fmt "Prêt ?"
-
-    method leave fmt () = fpf fmt "À bientôt !"
-
     method new_question_btn () = "Nouvelle question"
 
     method show_answer_btn () = "Voir la réponse"
@@ -173,14 +143,14 @@ let fr : t =
 
     method print_interval fmt (n1, n2, i, up) =
       if up = true then
-        fpf fmt "%s.•°%s est une %s %s montante (%1.1f ton%s)"
+        fpf fmt "%s .•° %s est une %s %s montante (%1.1f ton%s)"
           (self#note_name n1) (self#note_name n2)
           (self#interval_name i.Interval.name)
           (self#interval_kind i.kind)
           i.nb_tones
           (if i.nb_tones > 1. then "s" else "")
       else
-        fpf fmt "%s°•.%s est une %s %s descendante (%1.1f ton%s)"
+        fpf fmt "%s °•. %s est une %s %s descendante (%1.1f ton%s)"
           (self#note_name n1) (self#note_name n2)
           (self#interval_name i.Interval.name)
           (self#interval_kind i.kind)
