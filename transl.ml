@@ -3,6 +3,8 @@ let fpf = Format.fprintf
 type t =
   < start : Format.formatter -> unit -> unit
   ; leave : Format.formatter -> unit -> unit
+  ; new_question_btn : unit -> string
+  ; show_answer_btn : unit -> string
   ; note_name : Note.t -> string
   ; interval_name : Interval.name -> string
   ; interval_kind : Interval.kind -> string
@@ -47,6 +49,10 @@ let en : t =
     method start fmt () = fpf fmt "Ready?"
 
     method leave fmt () = fpf fmt "See you soon!"
+
+    method new_question_btn () = "New question"
+
+    method show_answer_btn () = "Show answer"
 
     method note_name n =
       match n.Note.name with
@@ -131,6 +137,10 @@ let fr : t =
     method start fmt () = fpf fmt "Prêt ?"
 
     method leave fmt () = fpf fmt "À bientôt !"
+
+    method new_question_btn () = "Nouvelle question"
+
+    method show_answer_btn () = "Voir la réponse"
 
     method note_name n =
       match n.Note.name with

@@ -2,6 +2,17 @@ let start transl = Format.printf "%a" transl#start ()
 
 let leave transl = Format.printf "\n%a\n" transl#leave ()
 
+let random_note () = List.nth Note.scale (Random.int (List.length Note.scale))
+
+let remove_first lst = match lst with _ :: tl -> tl | [] -> []
+
+let random_interval () =
+  let is = remove_first (List.rev (remove_first Interval.intervals)) in
+  let i = List.nth is (Random.int (List.length is)) in
+  i.Interval.name
+
+let random_question qs = List.nth qs (Random.int (List.length qs))
+
 let find_interval interval =
   List.filter (fun i -> i.Interval.name = interval) Interval.intervals
 
