@@ -9,14 +9,13 @@ let modify_elem id content =
 
 let show_answer_btn () =
   let elem = Dom_html.getElementById "show_answer" in
-  elem##.style##.cssText := Js.string "visibility: visible;"
+  elem##.style##.display := Js.string "block"
 
 let hide_answer_btn () =
   let elem = Dom_html.getElementById "show_answer" in
-  elem##.style##.cssText := Js.string "visibility: hidden;"
+  elem##.style##.display := Js.string "none"
 
-let clear_answer () =
-  modify_elem "answer" ""
+let clear_answer () = modify_elem "answer" ""
 
 let setup_buttons transl =
   let nq_btn = Dom_html.getElementById "new_question" in
@@ -24,7 +23,7 @@ let setup_buttons transl =
   nq_btn##.style##.visibility := Js.string "visible";
   let sa_btn = Dom_html.getElementById "show_answer" in
   sa_btn##.textContent := Js.some (Js.string (transl#show_answer_btn ()));
-  sa_btn##.style##.visibility := Js.string "hidden"
+  sa_btn##.style##.display := Js.string "none"
 
 let new_question_args transl =
   let n1 = Playground.random_note () in
@@ -47,9 +46,15 @@ let rec new_question transl =
   let n1, n2, i, q = new_question_args transl in
   let qt = asprintf "%a" q.q (n1, n2, i, q.up) in
   modify_elem "question" qt;
-  let t1 = let* () = wait_button_q () in Lwt.return `New_q in
-  let t2 = let* () = wait_button_ans () in Lwt.return `Show_ans in
-  let* r = Lwt.pick [t1;t2] in
+  let t1 =
+    let* () = wait_button_q () in
+    Lwt.return `New_q
+  in
+  let t2 =
+    let* () = wait_button_ans () in
+    Lwt.return `Show_ans
+  in
+  let* r = Lwt.pick [ t1; t2 ] in
   match r with
   | `New_q -> new_question transl
   | `Show_ans -> show_answer transl n1 n2 i q
@@ -58,7 +63,8 @@ and show_answer transl n1 n2 i q =
   hide_answer_btn ();
   let at = asprintf "%a" q.a (q.func n1 n2 i, q.up) in
   modify_elem "answer" at;
-  let* () = wait_button_q () in new_question transl
+  let* () = wait_button_q () in
+  new_question transl
 
 let lang = `Fr
 

@@ -1,0 +1,48 @@
+body, h1, h2, h3, h4, p, button {
+	font-family: Helvetica, Arial, sans-serif;
+	font-weight: 200;
+}
+
+body {
+	margin: 2em;
+}
+
+h1 {
+	letter-spacing: 0.2em;
+	color: DodgerBlue;
+}
+
+h2 {
+	font-size: 1.5em;
+}
+
+button {
+	border-radius: 1em;
+	border: none;
+	position: right;
+	padding: 1em 1em;
+	background-color: DodgerBlue;
+	color: Aquamarine;
+	font-size: 1em;
+	letter-spacing: 0.2em;
+}
+
+p {
+	letter-spacing: 0.1em;
+}
+
+#question span {
+	color: blue;
+}
+
+#answer span {
+	color: blue;
+} 
+
+#new_question {
+
+}
+
+#show_answer {
+
+}
