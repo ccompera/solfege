@@ -4,31 +4,36 @@ body, h1, h2, h3, h4, p, button {
 }
 
 body {
-	margin: 2em;
+  	margin: 0;
+	padding: 20px;
+	width: 100%;
 }
 
 h1 {
-	letter-spacing: 0.2em;
+	letter-spacing: 5px;
 	color: DodgerBlue;
+	width: 100%;
 }
 
 h2 {
-	font-size: 1.5em;
+	font-size: 20px;
+	width: 100%;
 }
 
 button {
-	border-radius: 1em;
+	border-radius: 15px;
 	border: none;
 	position: right;
-	padding: 1em 1em;
+	padding: 10px 15px;
 	background-color: DodgerBlue;
 	color: Aquamarine;
-	font-size: 1em;
-	letter-spacing: 0.2em;
+	/*font-size: 1em;*/
+	letter-spacing: 5px;
 }
 
 p {
-	letter-spacing: 0.1em;
+	width: 100%;
+	/*letter-spacing: 0.1em;*/
 }
 
 #question span {
